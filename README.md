@@ -1,4 +1,4 @@
-# pybuild
+# pymsbuild
 A simple and configurable python script to build apps using MSBuild.
 
 ## Configuration
