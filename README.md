@@ -5,6 +5,9 @@ A simple and configurable python script to build apps using MSBuild.
 The script can be configured using a json file. An example of such a configuration file can be found in `build.config.json`
 
 ### Commented configuration example
+
+Next up, a commented example of a configuration file
+
     {
         // Currently not in use. Can be left out
         "json_version": 1,
@@ -96,3 +99,10 @@ The script can be configured using a json file. An example of such a configurati
         // the script will be configured as 'logging.basicConfig(level=logging.INFO)'.
     }
     
+## Script Usage
+    # The configurator reads the json file. The default path/name is 'build.config.json'
+    config = Configurator()
+    # Create the MSBuilder, 'config' is mandatory, pre- and postbuild are optional
+    builder = MsBuilder(config, prebuild=prebuild, postbuild=postbuild)
+    # Build the solution according to the configuration json
+    builder.build()
