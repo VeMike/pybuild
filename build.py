@@ -1,4 +1,4 @@
-from pybuild import MsBuilder, Configurator
+from pymsbuild import MsBuilder, Configurator
 import logging
 
 def prebuild(user_defined_config):
