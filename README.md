@@ -100,7 +100,7 @@ Next up, a commented example of a configuration file
     }
     
 ## Script Usage
-    # The configurator reads the json file. The default path/name is 'build.config.json'
+    # The configurator reads the json file. The default path/name is './build.config.json'
     config = Configurator()
     # Create the MSBuilder, 'config' is mandatory, pre- and postbuild are optional
     builder = MsBuilder(config, prebuild=prebuild, postbuild=postbuild)
