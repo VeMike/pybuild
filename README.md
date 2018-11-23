@@ -100,9 +100,30 @@ Next up, a commented example of a configuration file
     }
     
 ## Script Usage
+
     # The configurator reads the json file. The default path/name is './build.config.json'
     config = Configurator()
     # Create the MSBuilder, 'config' is mandatory, pre- and postbuild are optional
     builder = MsBuilder(config, prebuild=prebuild, postbuild=postbuild)
     # Build the solution according to the configuration json
     builder.build()
+    
+### Pre- and Postbuild callbacks
+
+Pre- and postbuild steps are optional and can be passed the the `MsBuilder`. Both functions must return `True\False` to indicate their result to the `MsBuilder`. If the `prebuild`-callback returns `False`, the build will be aborted. The `postbuild`-callback will be called after a successfull build.
+
+Both pre- and postbuild callbacks need to take one parameter, the `user_defined_config` specified in the `build.config.json`
+    
+    # An example for a postbuild callback
+    def prebuild(user_defined_config):
+
+        error = prepare_files()
+        
+        # ... access config
+        my_conf = user_defined_config['my_fancy_object']
+        
+        do_something_with(my_conf)
+        
+        if error
+            return False
+        return True
