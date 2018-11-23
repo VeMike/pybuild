@@ -91,4 +91,8 @@ The script can be configured using a json file. An example of such a configurati
                 }
             ]
         }
+        
+        // An optional object called 'logging' can be here, to configure python logging module. If none is specified
+        // the script will be configured as 'logging.basicConfig(level=logging.INFO)'.
     }
+    
