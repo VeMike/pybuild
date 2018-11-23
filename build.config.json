@@ -1,0 +1,101 @@
+{
+    "json_version": 1,
+
+    "user_defined_config":
+    {
+        "any": "Anything can be in here. 'user_defined_config' will be passed to pre/post build",
+        "my_fancy_object":
+        {
+            "my_list": ["Just", "some", "text"]
+        }
+    },
+
+    "build_tools":
+    {
+        "msbuild":
+        {
+            "paths": [
+                        "A\\path\\to\\recursively\\search\\for\\msbuild",
+                        "A\\direct\\path\\to\\MSBuild.exe",
+                        "%ProgramFiles%\\a\\path\\containing\\env\\vars"
+                     ]
+        },
+
+        "nuget":
+        {
+            "paths": [
+                        "A\\path\\to\\recursively\\search\\for\\nuget",
+                        "A\\direct\\path\\to\\nuget.exe",
+                        "%ProgramFiles%\\a\\path\\containing\\env\\vars"
+                     ]
+        }
+    },
+
+    "solution":
+    {
+        "name": "The name of the solution",
+        "path": "the\\path\\to\\the\\solution.sln",
+        "projects":
+        [
+            {
+                "project":
+                {
+                    "name": "The name of the project in the solution",
+                    "path": "the\\path\\to\\project.csproj",
+                    "build_properties":
+                    {
+                        "Any MsBuild Project Property/Parameter": "The value of the parameter",
+                        "TargetFrameworkVersion": "4.7.1",
+                        "DebugSymbols": "false",
+                        "DebugType": "none",
+                        "OutputPath": "..\\relative\\to\\solution\\bin\\Release",
+                        "Configuration": "Release"
+                    }
+                }
+            },
+            {
+                "project":
+                {
+                    "name": "Another project in the solution",
+                    "path": "the\\path\\to\\another\\project.csproj",
+                    "build_properties":
+                    {
+                        "Any MsBuild Project Property/Parameter": "The value of the parameter",
+                        "TargetFrameworkVersion": "4.7.1",
+                        "DebugSymbols": "false",
+                        "DebugType": "none",
+                        "OutputPath": "..\\relative\\to\\solution\\bin\\Release",
+                        "Configuration": "Release"
+                    }
+                }
+            }
+        ]
+    },
+
+    "logging":
+    {
+        "disable_existing_loggers": "False",
+        "version": 1,
+        "formatters":
+        {
+            "default":
+            {
+                "format": "%(asctime)s - [%(levelname)-8s] - %(name)s [%(funcName)s: %(lineno)s] - %(message)-15s"
+            }
+        },
+        "handlers":
+        {
+            "console":
+            {
+                "class": "logging.StreamHandler",
+                "formatter": "default",
+                "stream": "ext://sys.stdout"
+            }
+        },
+        "root":
+        {
+            "handlers" : ["console"],
+            "level": "INFO"
+        }
+    }
+}
