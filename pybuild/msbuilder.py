@@ -239,9 +239,9 @@ class _NugetCmd:
         self._log.debug('Checking if {0} uses nuget'.format(self._solution_path))
         # Get the directory of the solution
         solution_dir = dirname(self._solution_path)
-        # Search the solution directory for any 'packages.json'. If one is found, assume that nuget is used.
+        # Search the solution directory for any 'packages.config'. If one is found, assume that nuget is used.
         finder = _FileFinder([solution_dir])
-        # Find packages.json
+        # Find packages.config
         path = finder.find_file(_NugetCmd._PACKAGES_CONFIG)
         # Check, if the file was found
         if path is None:
