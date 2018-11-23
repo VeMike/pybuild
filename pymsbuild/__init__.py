@@ -2,4 +2,4 @@
 from pymsbuild.msbuilder import MsBuilder, Configurator
 
 # A list of 'public objects', that will be imported, when a user types 'from pymsbuild import *'
-__all__ = ['msbuilder']
+__all__ = ['MsBuilder', 'Configurator']

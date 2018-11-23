@@ -1,5 +1,6 @@
-from pymsbuild import MsBuilder, Configurator
+from pymsbuild import *
 import logging
+
 
 def prebuild(user_defined_config):
     log = logging.getLogger(__name__)
