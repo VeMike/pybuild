@@ -114,7 +114,7 @@ Pre- and postbuild steps are optional and can be passed the the `MsBuilder`. Bot
 
 Both pre- and postbuild callbacks need to take one parameter, the `user_defined_config` specified in the `build.config.json`
     
-    # An example for a postbuild callback
+    # An example for a prebuild callback
     def prebuild(user_defined_config):
 
         error = prepare_files()
