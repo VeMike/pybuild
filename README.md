@@ -76,6 +76,11 @@ Next up, a commented example of a configuration file
                         // Mandatory: The name of the project, actual value does not matter
                         "name": "The name of the project in the solution",
                         
+                        // Optional: This will automatically increase 'AssemblyVersion' and 'AssemblyFileVersion' inside 
+                        // 'AssemblyInfo.cs' according to the given pattern. '+' will increase the previous version-part by 1. '0' will
+                        // be left as is. If neither 'AssemblyVersion' nor 'AssemblyFileVersion' are present, nothing will happen.
+                        "versioning": "0.0.+.0",
+                        
                         // Mandatory: The path to the project in the solution
                         "path": "the\\path\\to\\project.csproj",
                         
