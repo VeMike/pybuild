@@ -3,6 +3,7 @@ import json
 from subprocess import run, CalledProcessError
 from os.path import isfile, join, dirname, expandvars
 from os import walk
+from re import search
 
 
 class MsBuilder:
@@ -101,6 +102,8 @@ class Configurator:
 
 
 class _MsBuildCmd:
+    # The AssemblyInfo.cs for versioning
+    _ASSEMBLYINFO = 'AssemblyInfo.cs'
     # The name of msbuild
     _MS_BUILD_NAME = 'MSBuild.exe'
     # The build target command line switch for msbuild
@@ -124,6 +127,22 @@ class _MsBuildCmd:
             self._log.fatal('MSBuild.exe was not found in any of the defined paths')
             # Return false to indicate an error
             return False
+        # Check, if we need to update the AssemblyVersion
+        if 'versioning' in project:
+            self._log.info('A configuration for versioning was found. Version will be updated')
+            # Use the finder, to search for AssemblyInfo.cs
+            finder = _FileFinder([dirname(project['path'])])
+            # The path to AssemblyInfo.cs
+            assembly_info = finder.find_file(_MsBuildCmd._ASSEMBLYINFO)
+            # Check, if the file was found
+            if assembly_info is not None:
+                # Create a new versioner
+                versioner = _Versioner(assembly_info, project['versioning'])
+                # Update the verison
+                versioner.increment()
+            else:
+                self._log.warning('AssemblyInfo.cs was not found. Version will not be updated during build')
+        # Build the project using msbuild
         if not self._call_msbuild(project):
             return False
         return True
@@ -176,7 +195,6 @@ class _MsBuildCmd:
 
 
 class _NugetCmd:
-
     # The name of the nuget executable
     _NUGET_EXE = 'nuget.exe'
     # The nuget option passed to the exe
@@ -253,6 +271,71 @@ class _NugetCmd:
         self._log.info('{0} found: {1}!. Nuget.exe will be called to fetch libraries'.format(_NugetCmd._PACKAGES_CONFIG,
                                                                                              path))
         return True
+
+
+class _Versioner:
+    # The format string for the assembly version
+    _ASSEMBLY_VERSION_FORMAT = '[assembly: AssemblyVersion(\"{0}\")]\n'
+    # The format string for the assembly file version
+    _ASSEMBLY_FILE_VERSION_FORMAT = '[assembly: AssemblyFileVersion(\"{0}\")]\n'
+    # The assembly version attribute in AssemblyInfo.cs
+    _ASSEMBLY_VERSION_PATTERN = r'\[assembly: AssemblyVersion\("(.\..\..\..)"\)\]'
+    # The assembly file version pattern in AssemblyInfo.cs
+    _ASSEMBLY_FILE_VERSION_PATTERN = r'\[assembly: AssemblyFileVersion\("(.\..\..\..)"\)\]'
+
+    def __init__(self, file_path, versioning):
+        self._log = logging.getLogger(__name__ + ".{0}".format(self.__class__.__name__))
+        # The path to the file (AssemblyInfo.cs)
+        self._file_path = file_path
+        # Split the string into its version sections
+        self._version_parts = versioning.split('.')
+        # A list containing the files contents
+        self._file_content = []
+
+    def increment(self):
+        # Is there any need to change the version?
+        if not any(symbol == '+' for symbol in self._version_parts):
+            self._log.info('No AssemblyVersion update will be done, since the placeholder "+" was not specified')
+            return
+        # Open the file and read its contents
+        with open(self._file_path, 'r') as file:
+            # Read the full file
+            self._file_content = file.readlines()
+        # Iterate the contents of the file
+        for index, line in enumerate(self._file_content):
+            # Search for the pattern in the line
+            match = search(_Versioner._ASSEMBLY_VERSION_PATTERN, line)
+            # Do we have a match?
+            if match is not None:
+                incremented = self._increase_version(match.group(1))
+                self._file_content[index] = _Versioner._ASSEMBLY_VERSION_FORMAT.format(incremented)
+            # Search for the next pattern in the line
+            match = search(_Versioner._ASSEMBLY_FILE_VERSION_PATTERN, line)
+            # Do we have a match?
+            if match is not None:
+                incremented = self._increase_version(match.group(1))
+                self._file_content[index] = _Versioner._ASSEMBLY_FILE_VERSION_FORMAT.format(incremented)
+        # Write the contents of the file back
+        with open(self._file_path, 'w') as file:
+            file.writelines(self._file_content)
+
+    def _increase_version(self, old_version):
+        self._log.info('The version before the build is: {0}'.format(old_version))
+        # Split the version string
+        parts = old_version.split('.')
+        # Iterate the versioning configuration
+        for index, element in enumerate(self._version_parts):
+            if element is not '+':
+                continue
+            # Update the version part
+            new_version = int(parts[index]) + 1
+            parts[index] = str(new_version)
+        # Create the new version string
+        version_string = '.'.join(parts)
+        # Log
+        self._log.info('The new version string is: {0}'.format(version_string))
+        # Return the string
+        return version_string
 
 
 class _FileFinder:
