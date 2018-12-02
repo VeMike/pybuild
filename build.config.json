@@ -45,7 +45,6 @@
                     "versioning": "0.0.+.0",
                     "build_properties":
                     {
-                        "Any MsBuild Project Property/Parameter": "The value of the parameter",
                         "TargetFrameworkVersion": "4.7.1",
                         "DebugSymbols": "false",
                         "DebugType": "none",
@@ -62,7 +61,6 @@
                     "versioning": "0.0.0.+",
                     "build_properties":
                     {
-                        "Any MsBuild Project Property/Parameter": "The value of the parameter",
                         "TargetFrameworkVersion": "4.7.1",
                         "DebugSymbols": "false",
                         "DebugType": "none",

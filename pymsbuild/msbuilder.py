@@ -24,7 +24,7 @@ class MsBuilder:
             self._log.error('Build cannot be performed, since the build configuration is not available')
 
         # Call the prebuild operations
-        if not self._call(self._prebuild, 'prebuild'):
+        if not self._invoke(self._prebuild, 'prebuild'):
             return
 
         # Do the actual build
@@ -33,14 +33,19 @@ class MsBuilder:
             return
 
         # Call the postbuild operations
-        if not self._call(self._postbuild, 'postbuild'):
+        if not self._invoke(self._postbuild, 'postbuild'):
             return
 
     def _run(self):
         self._log.info('Starting to build')
-        # Nuget dependencies need to be fetched before the build
-        nuget_cmd = _NugetCmd(self._build_config['solution']['path'], self._build_config['build_tools']['nuget'])
-        # Fetch the dependancies, if there are any
+        # Check, if nuget was specified
+        if 'nuget' in self._build_config['build_tools']:
+            # Create the nuget instance
+            nuget_cmd = _NugetCmd(self._build_config['solution']['path'], self._build_config['build_tools']['nuget'])
+        else:
+            # Create the nuget instance
+            nuget_cmd = _NugetCmd(self._build_config['solution']['path'])
+        # Fetch the dependencies
         if not nuget_cmd.fetch_dependencies():
             return False
         # Create a new instance of the MsBuildCmd
@@ -54,7 +59,7 @@ class MsBuilder:
         self._log.info('Build was successful')
         return True
 
-    def _call(self, callback, callback_kind):
+    def _invoke(self, callback, callback_kind):
         # Check, if we need to invoke
         if callback is None:
             # Log, that the callback was empty
