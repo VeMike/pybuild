@@ -284,9 +284,9 @@ class _Versioner:
     # The format string for the assembly file version
     _ASSEMBLY_FILE_VERSION_FORMAT = '[assembly: AssemblyFileVersion(\"{0}\")]\n'
     # The assembly version attribute in AssemblyInfo.cs
-    _ASSEMBLY_VERSION_PATTERN = r'\[assembly: AssemblyVersion\("(.\..\..\..)"\)\]'
+    _ASSEMBLY_VERSION_PATTERN = r'\[assembly: AssemblyVersion\("(\d+\.\d+\.\d+\.\d+)"\)\]'
     # The assembly file version pattern in AssemblyInfo.cs
-    _ASSEMBLY_FILE_VERSION_PATTERN = r'\[assembly: AssemblyFileVersion\("(.\..\..\..)"\)\]'
+    _ASSEMBLY_FILE_VERSION_PATTERN = r'\[assembly: AssemblyFileVersion\("(\d+\.\d+\.\d+\.\d+)"\)\]'
 
     def __init__(self, file_path, versioning):
         self._log = logging.getLogger(__name__ + ".{0}".format(self.__class__.__name__))
